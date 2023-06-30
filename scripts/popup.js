@@ -81,12 +81,12 @@ fetch("http://192.168.8.1/goform/goform_get_cmd_process?isTest=false&cmd=system_
                                    Online Time: ${formatTimeValue(data.online_time)}<br>`;
         }
         if (infoData) {
-            infoData.innerHTML = `Uplink Traffic: ${formatTrafficValue(data.uplink_traffic)}<br>
-                                   Downlink Traffic: ${formatTrafficValue(data.downlink_traffic)}<br>`;
+            infoData.innerHTML = `&UpArrowBar; Uplink Traffic: ${formatTrafficValue(data.uplink_traffic)}<br>
+                                  &DownArrowBar; Downlink Traffic: ${formatTrafficValue(data.downlink_traffic)}<br>`;
         }
         if (dataRate) {
-            dataRate.innerHTML = `Uplink Rate: ${data.uplink_rate} kbps<br>
-                                  Downlink Rate: ${data.downlink_rate} kbps<br>`;
+            dataRate.innerHTML = `Uplink Rate &uarr; : ${data.uplink_rate} kbps<br>
+                                  Downlink Rate &darr; : ${data.downlink_rate} kbps<br>`;
         }
     })
     .catch(error => {

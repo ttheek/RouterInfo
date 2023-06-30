@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "RouterCuz",
+    "version": "1.0",
+    "description": "Customize Router page",
+    "permissions": [
+        "tabs"
+    ],
+    "action": {
+        "default_icon": "hello_extensions.png",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [{
+        "matches": ["http://192.168.8.1/*"],
+        "js": ["content.js"]
+    }]
+}

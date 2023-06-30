@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "RouterCuz",
-    "version": "1.0",
+    "version": "1.2",
     "description": "Customize Router page",
     "permissions": [
         "tabs"

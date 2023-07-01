@@ -137,10 +137,10 @@ function updateMemoryStatus() {
                             const cpuUsage = extractNumericValue(memoryData.tz_cpu_usage);
                             const cpuUsageProgress = createCPUProgressBar(cpuUsage);
                             infoContainer.appendChild(cpuUsageProgress);
-                            memT = extractNumericValue(memTotal);
-                            memF = extractNumericValue(memFree);
+                            memT = extractNumericValue(memoryData.mem_total);
+                            memF = extractNumericValue(memoryData.mem_free);
                             usedPercentage = ((memT - memF) / memT) * 100;
-                            infoContainer.innerHTML += `<br>Memory Usage:${usedPercentage}%`;
+                            infoContainer.innerHTML += `<br>Memory Usage: ${usedPercentage.toFixed(2)}%`;
                             const memoryUsageProgress = createMemoryProgressBar(memoryData.mem_total, memoryData.mem_free);
                             infoContainer.appendChild(memoryUsageProgress);
 

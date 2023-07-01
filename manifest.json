@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "RouterCuz",
-    "version": "1.5 (beta)",
+    "version": "1.5.1",
     "description": "Popup window for ZLT Home Broadbands.",
     "permissions": [
         "tabs"

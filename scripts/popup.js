@@ -34,16 +34,17 @@ function padZero(value) {
 
 function createCPUProgressBar(cpu) {
     const cpuUsage = extractNumericValue(cpu);
+    const cpuUsedPercentage = (cpu / 100) * 100
     const progressBar = document.createElement("div");
     progressBar.className = "progress-bar";
 
     const progressFill = document.createElement("div");
     progressFill.className = "progress-fill";
-    progressFill.style.width = `${cpuUsage}%`;
+    progressFill.style.width = `${cpuUsedPercentage}%`;
 
     const progressText = document.createElement("div");
     progressText.className = "progress-text";
-    progressText.innerText = `${cpuUsage}%`;
+    progressText.innerText = `${cpuUsedPercentage}%`;
 
     progressBar.appendChild(progressFill);
     progressBar.appendChild(progressText);

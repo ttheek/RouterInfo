@@ -7,8 +7,6 @@ function extractNumericValue(valueWithUnits) {
     return isNaN(numericValue) ? 0 : numericValue;
 }
 
-
-
 function formatMemoryValue(memoryWithUnits) {
     const memoryInKB = extractNumericValue(memoryWithUnits);
     const memoryInMB = memoryInKB / 1024;
@@ -30,7 +28,6 @@ function formatTimeValue(seconds) {
 function padZero(value) {
     return value.toString().padStart(2, "0");
 }
-
 
 function createCPUProgressBar(cpu) {
     const cpuUsage = extractNumericValue(cpu);
@@ -74,11 +71,8 @@ function createMemoryProgressBar(memT, memF) {
     return progressBar;
 }
 
-
-
-
 function formatRateValue(rateInKbps) {
-    const rateInMB = rateInKbps / 8000;
+    const rateInMB = rateInKbps / 1048576;
     return rateInMB.toFixed(2) + " MB/s";
 }
 
@@ -89,13 +83,27 @@ function updateSystemStatus() {
         .then(data => {
             // Update the popup menu with the received information
             var infoContainer2 = document.getElementById("info-container2");
+            var status = document.getElementById("status");
+            var internet = document.getElementById("internet");
             if (infoContainer2) {
+                if (data.service_status === "network_type_no_service") {
+                    connection = "No Internet";
+                    internet.className = "no-internet";
+                    network_type = ``;
+                    lte_band = ``;
+                    plmn = ``;
+                } else {
+                    connection = data.service_status
+                    network_type = `Network Type: ${data.network_type}<br>`
+                    lte_band = `LTE Band: ${data.lte_band}<br>`
+                    plmn = `ISP: ${data.plmn}<br>`
+                }
+                internet.innerHTML = `${connection}`
                 infoContainer2.innerHTML = `SIM Status: ${data.sim_status}<br>
-                                    Network Type: ${data.network_type}<br>
-                                    Service Status: ${data.service_status}<br>
-                                    ISP: ${data.plmn}<br>
+                                    ${network_type}
+                                    ${plmn}
                                     WAN IP: ${data.wan_ip}<br>
-                                    LTE Band: ${data.lte_band}<br>                                                                      
+                                    ${lte_band}                                                                      
                                     Limit Switch: ${data.limit_switch}<br>
                                     Online Time: ${formatTimeValue(data.online_time)}<br>`;
 
@@ -134,7 +142,7 @@ function updateMemoryStatus() {
                                             Free Memory: ${formatMemoryValue(memoryData.mem_free)}<br>
                                             Cached Memory: ${formatMemoryValue(memoryData.mem_cached)}<br>
                                             Active Memory: ${formatMemoryValue(memoryData.mem_active)}<br>
-                                            CPU Usage: ${memoryData.tz_cpu_usage}<br>`;
+                                            <br>CPU Usage: ${memoryData.tz_cpu_usage}<br>`;
                             const cpuUsage = extractNumericValue(memoryData.tz_cpu_usage);
                             const cpuUsageProgress = createCPUProgressBar(cpuUsage);
                             infoContainer.appendChild(cpuUsageProgress);
@@ -161,6 +169,7 @@ function updateMemoryStatus() {
             console.error("Error fetching login status:", error);
         });
 }
+
 
 
 // Update the system status initially

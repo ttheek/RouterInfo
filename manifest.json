@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "RouterCuz",
+    "name": "RouterInfo",
     "version": "1.5.2",
     "description": "Popup window for ZLT Home Broadbands.",
     "permissions": [

@@ -170,11 +170,28 @@ function updateMemoryStatus() {
         });
 }
 
+function updateVersion() {
+    //copyright.innerHTML = `T.Theekshana  2023`
+    fetch("./manifest.json")
+        .then(response => response.json())
+        .then(versionData => {
+            var copyright = document.getElementById("copy");
+            if (copyright) {
+                copyright.innerHTML = `${versionData.name} v${versionData.version}<br>
+                                        T.Theekshana &copy; 2023`
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching version info:", error);
+        });
+}
+
 
 
 // Update the system status initially
 updateSystemStatus();
 updateMemoryStatus();
+updateVersion();
 
 setInterval(() => {
     if (document.documentElement) {

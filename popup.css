@@ -1,5 +1,18 @@
+html {
+    padding: 0;
+}
+
 body {
+    width: 250px;
+    padding: 5px;
     font-family: JetBrains mono;
+}
+
+footer {
+    background-color: rgba(168, 166, 166, 0.473);
+    text-align: center;
+    padding: 2px;
+    border-radius: 4px;
 }
 
 .progress-bar {

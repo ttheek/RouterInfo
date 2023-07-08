@@ -76,6 +76,45 @@ function formatRateValue(rateInKbps) {
     return rateInMB.toFixed(2) + " KB/s";
 }
 
+function webSignal() {
+    fetch("http://192.168.8.1/goform/goform_get_cmd_process?isTest=false&cmd=web_signal")
+        .then(response => response.json())
+        .then(data => {
+            // Access the data from the response and update the signal bars
+            const signalStrength = data.web_signal;
+            const signalBar1 = document.getElementById("signal-bar-1");
+            if (signalBar1) {
+                signalBar1.classList.remove("active");
+                if (signalStrength >= 1) {
+                    signalBar1.classList.add("active");
+                }
+            }
+
+            // Update signal bar 2
+            const signalBar2 = document.getElementById("signal-bar-2");
+            if (signalBar2) {
+                signalBar2.classList.remove("active");
+                if (signalStrength >= 2) {
+                    signalBar2.classList.add("active");
+                }
+            }
+
+            // Update signal bar 3
+            const signalBar3 = document.getElementById("signal-bar-3");
+            if (signalBar3) {
+                signalBar3.classList.remove("active");
+                if (signalStrength >= 3) {
+                    signalBar3.classList.add("active");
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching web signal:", error);
+        });
+}
+
+
+
 function updateSystemStatus() {
     // Make an AJAX request to retrieve system status information
     fetch("http://192.168.8.1/goform/goform_get_cmd_process?isTest=false&cmd=system_status")
@@ -84,25 +123,27 @@ function updateSystemStatus() {
             // Update the popup menu with the received information
             var infoContainer2 = document.getElementById("info-container2");
             var status = document.getElementById("status");
-            var internet = document.getElementById("internet");
+            const internet = document.getElementById("internet");
             if (infoContainer2) {
                 if (data.service_status === "network_type_no_service") {
+                    const signal = document.getElementById("signal-container");
+                    signal.classList.display = "none";
                     connection = "No Internet";
                     internet.className = "no-internet";
                     network_type = ``;
                     lte_band = ``;
                     plmn = ``;
+
                 } else {
                     connection = ''
-                    network_type = `Network Type: ${data.network_type}<br>`
+                    network_type = data.network_type
                     lte_band = `LTE Band: ${data.lte_band}<br>`
                     plmn = data.plmn
+                    webSignal()
                 }
-                internet.innerHTML = `${connection}${plmn} ${data.network_type}`
+                internet.innerHTML = `${connection}${plmn} ${network_type}`
                 infoContainer2.innerHTML = `<h2>System</h2>
                                     SIM Status: ${data.sim_status}<br>
-                                    ${network_type}
-                                    ${plmn}
                                     WAN IP: ${data.wan_ip}<br>
                                     ${lte_band}                                                                      
                                     Limit Switch: ${data.limit_switch}<br>
@@ -143,7 +184,7 @@ function login() {
         })
         .then(response => response.json())
         .then(data => {
-            // Handle the login response here
+            updateMemoryStatus();
             console.log(data);
         })
         .catch(error => {
@@ -151,17 +192,42 @@ function login() {
         });
 }
 
-function restartRouter() {
-    // Make an AJAX request to restart the router
-    fetch("http://192.168.8.1/goform/goform_set_cmd_process?isTest=false&goformId=REBOOT_DEVICE")
-        .then(response => {
-            // Handle the response
-            console.log("Router restart initiated");
+function checkRouterReconnected() {
+    fetch("http://192.168.8.1/goform/goform_get_cmd_process?isTest=false&cmd=loginfo")
+        .then(response => response.json())
+        .then(data => {
+            if (data.loginfo === "") {
+                // Router has reconnected, hide the overlay
+                const overlay = document.getElementById("overlay");
+                overlay.style.display = "none";
+                // Resume updating system status
+                updateSystemStatus();
+            } else {
+                // Router is still restarting, fetch again after a delay
+                setTimeout(checkRouterReconnected, 1000); // Fetch every 1 second
+            }
         })
         .catch(error => {
-            console.error("Error restarting router:", error);
+            console.error("Error fetching loginfo:", error);
+            // Retry after a delay
+            setTimeout(checkRouterReconnected, 1000); // Retry every 1 second
         });
 }
+
+function restartRouter() {
+    const overlay = document.getElementById("overlay");
+    overlay.style.display = "block";
+    // Make an AJAX request to restart the router
+    fetch("http://192.168.8.1/goform/goform_set_cmd_process?isTest=false&goformId=REBOOT_DEVICE")
+        .then(() => {
+            // Router restart initiated, start checking for reconnection
+            checkRouterReconnected();
+        })
+        .catch(error => {
+            console.error("Router restart error:", error);
+        });
+}
+
 
 function updateMemoryStatus() {
     fetch("http://192.168.8.1/goform/goform_get_cmd_process?isTest=false&cmd=loginfo")
@@ -233,9 +299,9 @@ function updateVersion() {
         });
 }
 
+
 const modeToggleButton = document.getElementById("mode-toggle-button");
 const body = document.body;
-
 modeToggleButton.addEventListener("click", toggleMode);
 
 function toggleMode() {
@@ -243,7 +309,6 @@ function toggleMode() {
     body.classList.toggle("light-mode");
 }
 
-// Update the system status initially
 updateSystemStatus();
 updateMemoryStatus();
 updateVersion();

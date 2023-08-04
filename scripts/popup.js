@@ -154,9 +154,13 @@ function updateSystemStatus() {
                 var infoData = document.getElementById("info-data");
                 var dataRate = document.getElementById("data-rate");
                 if (infoData) {
+                    up_traffic = formatTrafficValue(data.uplink_traffic)
+                    down_traffic = formatTrafficValue(data.downlink_traffic)
+                    total_traffic = extractNumericValue(up_traffic) + extractNumericValue(down_traffic)
                     infoData.innerHTML = `<h2>Data Usage</h2>
-                                    &UpArrowBar; Uplink Traffic: ${formatTrafficValue(data.uplink_traffic)}<br>
-                                    &DownArrowBar; Downlink Traffic: ${formatTrafficValue(data.downlink_traffic)}<br>`;
+                                    &UpArrowBar; Uplink Traffic: ${up_traffic}<br>
+                                    &DownArrowBar; Downlink Traffic: ${down_traffic}<br>
+                                    &#8693; Total Taffic: ${total_traffic} GB`;
                 }
                 if (dataRate) {
                     dataRate.innerHTML = `<h2>Data Rate &#8693;</h2>
@@ -273,6 +277,7 @@ function updateMemoryStatus() {
                     loginStatus.innerHTML = "<h2>Memory Information</h2>Please login to view this data.";
                     const loginButton = document.createElement("button");
                     loginButton.innerText = "Login";
+                    loginButton.className = "login";
                     loginButton.addEventListener("click", login);
                     loginStatus.appendChild(loginButton);
                 }
@@ -308,6 +313,10 @@ function toggleMode() {
     body.classList.toggle("dark-mode");
     body.classList.toggle("light-mode");
 }
+
+document.getElementById("settingsButton").addEventListener("click", () => {
+    chrome.tabs.create({ url: "options.html" });
+});
 
 updateSystemStatus();
 updateMemoryStatus();

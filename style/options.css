@@ -1,0 +1,13 @@
+html {
+    padding: 0;
+}
+
+body {
+    font-family: JetBrains mono;
+    background-color: #ccc;
+}
+
+.chart {
+    width: 600px;
+    height: 400px;
+}

@@ -94,7 +94,7 @@ chart = new Chart(ctx, {
             y: {
                 title: {
                     display: true,
-                    text: "Rate (kbps)"
+                    text: "Rate (KB/s)"
                 }
             }
         }

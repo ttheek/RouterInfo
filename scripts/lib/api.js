@@ -13,7 +13,7 @@ export async function getCmdProcess(params) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching data:', error);
+        // console.error('Error fetching data:', error);
         return null;
     }
 }
@@ -32,11 +32,10 @@ export async function setCmdProcess(params) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching data:', error);
+        // console.error('Error fetching data:', error);
         return null;
     }
 }
-
 
 export async function sendLoginRequest(username, password) {
     const url = "http://192.168.8.1/goform/goform_set_cmd_process";
@@ -66,5 +65,3 @@ export async function sendLoginRequest(username, password) {
         return null;
     }
 }
-
-

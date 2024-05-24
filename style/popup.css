@@ -143,40 +143,7 @@ button:hover {
     display: flex;
 }
 
-.signal-bar-1 {
-    width: 5px;
-    height: 10px;
-    margin-right: 5px;
-    background-color: white;
-    border-radius: 5px;
-    margin-top: 20px;
-}
-
-.signal-bar-1.active {
-    background-color: rgb(4, 190, 4);
-}
-
-.signal-bar-2 {
-    width: 5px;
-    height: 20px;
-    margin-right: 5px;
-    background-color: white;
-    border-radius: 5px;
-    margin-top: 10px;
-}
-
-.signal-bar-2.active {
-    background-color: rgb(4, 190, 4);
-}
-
-.signal-bar-3 {
-    width: 5px;
+#signal{
+    width: 40px;
     height: 30px;
-    margin-right: 5px;
-    background-color: white;
-    border-radius: 5px;
-}
-
-.signal-bar-3.active {
-    background-color: rgb(4, 190, 4);
 }

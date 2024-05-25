@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "RouterInfo",
-    "version": "1.5.7",
+    "version": "1.5.8",
     "description": "Popup window for ZLT Home Broadbands.",
     "permissions": [
         "tabs",
@@ -16,5 +16,9 @@
         "32": "images/logo/icon32.png",
         "48": "images/logo/icon48.png",
         "128": "images/logo/icon128.png"
-    }
+    },
+    "content_scripts": [{
+        "matches": ["http://192.168.8.1/*"],
+        "js": ["scripts/content.js"]
+    }]
 }

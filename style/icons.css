@@ -1,3 +1,6 @@
+.signal_none{    
+    background: url("../images/signal.png") no-repeat scroll center -159px transparent;
+}
 .signal{    
     background: url("../images/signal.png") no-repeat scroll center 0px transparent;
 }
@@ -9,4 +12,10 @@
 }
 .signal3{    
     background: url("../images/signal.png") no-repeat scroll center -120px transparent;
+}
+
+.Dialog{
+    background: url("../images/Dialog.png") center 0px transparent;
+    width: 70px;
+    height: 43px;
 }

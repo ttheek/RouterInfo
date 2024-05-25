@@ -11,6 +11,7 @@ const overlayTXT = document.getElementById("overlay-txt");
 const infoContainer2 = document.getElementById("info-container2");
 const status = document.getElementById("status");
 const internet = document.getElementById("internet");
+const internet2 = document.getElementById("internet2");
 const signal = document.getElementById("signal")
 const infoData = document.getElementById("info-data");
 const dataRate = document.getElementById("data-rate");
@@ -21,8 +22,8 @@ function webSignal() {
             if (!data) {
                 return;
             }
-            const {web_signal} = data             
-            signal.classList = `signal${web_signal}`
+            const {web_signal} = data; 
+            signal.classList = web_signal ? `signal${web_signal}` : `signal_none`;  
         });
 }
 
@@ -51,7 +52,8 @@ function updateSystemStatus() {
             plmn2 = plmn;                
         }
         webSignal()
-        internet.innerHTML = `${connection}${plmn2} ${network_type2}`
+        internet2.classList = plmn2;
+        internet.innerHTML = `${connection} ${network_type2}`
         infoContainer2.innerHTML = `
             <h2>System</h2>
             SIM Status: ${sim_status}<br>
@@ -102,7 +104,6 @@ function restartRouter() {
             if (!data) console.log('Failed to fetch data.');
         });
 }
-
 
 function updateMemoryStatus() {
     getCmdProcess('loginfo')
@@ -159,10 +160,9 @@ function updateMemoryStatus() {
                     }
                 });
         });
-    }        
+}        
 
 function updateVersion() {
-    //copyright.innerHTML = `T.Theekshana  2023`
     fetch("./manifest.json")
         .then(response => response.json())
         .then(versionData => {

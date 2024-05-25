@@ -62,7 +62,6 @@ footer {
     font-weight: 600;
     align-self: flex-end;
     font-size: 14px;
-    padding-bottom: 8px;
 }
 
 button {
@@ -141,9 +140,16 @@ button:hover {
 
 .signal-container {
     display: flex;
+    padding-top: 10px;
 }
 
 #signal{
     width: 40px;
     height: 30px;
 }
+
+#wifi{
+    width: 36px;
+    height: 24px
+}
+

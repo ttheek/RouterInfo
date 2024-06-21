@@ -1,21 +1,42 @@
+:root{
+--wifi_img: url("../images/wifi.png");
+--signal: url("../images/signal.png");
+}
+
 .signal_none{    
-    background: url("../images/signal.png") no-repeat scroll center -159px transparent;
+    background: var(--signal) no-repeat scroll center -159px transparent;
 }
 .signal{    
-    background: url("../images/signal.png") no-repeat scroll center 0px transparent;
+    background: var(--signal) no-repeat scroll center 0px transparent;
 }
 .signal1{    
-    background: url("../images/signal.png") no-repeat scroll center -39px transparent;
+    background: var(--signal) no-repeat scroll center -39px transparent;
 }
 .signal2{    
-    background: url("../images/signal.png") no-repeat scroll center -82px transparent;
+    background: var(--signal) no-repeat scroll center -82px transparent;
 }
 .signal3{    
-    background: url("../images/signal.png") no-repeat scroll center -120px transparent;
+    background: var(--signal) no-repeat scroll center -120px transparent;
 }
 
 .Dialog{
     background: url("../images/Dialog.png") center 0px transparent;
     width: 70px;
     height: 43px;
+}
+
+.wifi_status0{
+    background: var(--wifi_img) no-repeat scroll 0 4px transparent;
+}
+.wifi_status1{
+    background: var(--wifi_img) no-repeat scroll 0 -20px transparent;
+}
+.wifi_status2{
+    background: var(--wifi_img) no-repeat scroll 0 -45px transparent;
+}
+.wifi_status3{
+    background: var(--wifi_img) no-repeat scroll 0 -70px transparent;
+}
+.wifi_status4{
+    background: var(--wifi_img) no-repeat scroll 0 -95px transparent;
 }

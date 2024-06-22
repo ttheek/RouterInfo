@@ -1,6 +1,6 @@
 import { sendLoginRequest,setCmdProcess,getCmdProcess } from './lib/api.js';
-import { extractNumericValue,formatMemoryValue,formatTrafficValue,formatRateValue } from './lib/utils.js';
-import { formatTimeValue,progressBar } from './lib/utils.js';
+import { extractNumeric,formatMemory,formatTraffic,formatRate } from './lib/utils.js';
+import { formatTime,progressBar } from './lib/utils.js';
 
 const username = "T3BlcmF0b3I="; // Base64 encoded username Operator
 const password = "b1ZBSFpYZUg="; // Base64 encoded password oVAHZXeH
@@ -65,7 +65,7 @@ function connected_devices() {
                 Hostname: <b>${device.hostname}</b><br>
                 Device MAC: ${device.mac_addr}<br>
                 IP Address: ${device.ip_addr}<br>
-                Connection Time: ${formatTimeValue(device.connect_time)}<br><br>
+                Connection Time: ${formatTime(device.connect_time)}<br><br>
             `).join('');
 
             connectedDevices.innerHTML += deviceHTML;
@@ -112,11 +112,11 @@ function updateSystemStatus() {
             SIM Status: ${sim_status}<br>
             WAN IP: ${wan_ip}<br>
             LTE Band: ${lte_band}<br>
-            Online Time: ${formatTimeValue(online_time)}<br>`;
+            Online Time: ${formatTime(online_time)}<br>`;
         
-        const up_traffic = formatTrafficValue(uplink_traffic)
-        const down_traffic = formatTrafficValue(downlink_traffic)
-        const total_traffic = (extractNumericValue(up_traffic) + extractNumericValue(down_traffic)).toFixed(2)
+        const up_traffic = formatTraffic(uplink_traffic)
+        const down_traffic = formatTraffic(downlink_traffic)
+        const total_traffic = (extractNumeric(up_traffic) + extractNumeric(down_traffic)).toFixed(2)
         infoData.innerHTML = `
             <h2>Data Usage</h2>
             &UpArrowBar; Uplink Traffic: ${up_traffic}<br>
@@ -124,8 +124,8 @@ function updateSystemStatus() {
             &#8693; Total Taffic: ${total_traffic} GB`;
         dataRate.innerHTML = `
             <h2>Data Rate &#8693;</h2>
-            Up Rate: ${formatRateValue(uplink_rate)}<br>
-            Down Rate: ${formatRateValue(downlink_rate)}<br>`;    
+            Up Rate: ${formatRate(uplink_rate)}<br>
+            Down Rate: ${formatRate(downlink_rate)}<br>`;    
     });
 }
 
@@ -185,10 +185,10 @@ function updateMemoryStatus() {
 
             if (infoContainer) {
                 const { mem_total, mem_free, mem_cached, mem_active, tz_cpu_usage } = memoryData;
-                const memT = extractNumericValue(mem_total);
-                const memF = extractNumericValue(mem_free);
+                const memT = extractNumeric(mem_total);
+                const memF = extractNumeric(mem_free);
                 const memoryUsedPercentage = Math.round(((memT - memF) / memT) * 100,3);
-                const cpuUsageProgress = progressBar(extractNumericValue(tz_cpu_usage),'cpu');
+                const cpuUsageProgress = progressBar(extractNumeric(tz_cpu_usage),'cpu');
                 const memoryUsageProgress = progressBar(memoryUsedPercentage, 'mem')
                 if (cpuUsageProgress){
 
@@ -196,10 +196,10 @@ function updateMemoryStatus() {
 
                 infoContainer.innerHTML = `
                     <h2>Memory Information</h2>
-                    Total Memory: ${formatMemoryValue(mem_total)}<br>
-                    Free Memory: ${formatMemoryValue(mem_free)}<br>
-                    Cached Memory: ${formatMemoryValue(mem_cached)}<br>
-                    Active Memory: ${formatMemoryValue(mem_active)}<br>
+                    Total Memory: ${formatMemory(mem_total)}<br>
+                    Free Memory: ${formatMemory(mem_free)}<br>
+                    Cached Memory: ${formatMemory(mem_cached)}<br>
+                    Active Memory: ${formatMemory(mem_active)}<br>
                     <br>CPU Usage: ${tz_cpu_usage}<br>`;
 
                 infoContainer.appendChild(cpuUsageProgress);
@@ -248,4 +248,4 @@ const init2 = setInterval(() => {
     if (document.documentElement) {
         updateSystemStatus();
     }
-}, 1000);
+}, 2000);

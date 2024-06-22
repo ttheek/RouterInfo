@@ -9,7 +9,7 @@
  * @param {number|string} value - The input value to extract the numeric value from.
  * @returns {number} The extracted numeric value.
  */
-export function extractNumericValue(valueWithUnits) {
+export function extractNumeric(valueWithUnits) {
     if (typeof value === "number") {
         return value;
     }
@@ -27,8 +27,8 @@ export function extractNumericValue(valueWithUnits) {
  * @param {string} memoryWithUnits - The memory value with units (e.g., "2048KB").
  * @returns {string} The formatted memory value in megabytes (MB).
  */
-export function formatMemoryValue(memoryWithUnits) {
-    const memoryInKB = extractNumericValue(memoryWithUnits);
+export function formatMemory(memoryWithUnits) {
+    const memoryInKB = extractNumeric(memoryWithUnits);
     const memoryInMB = memoryInKB / 1024;
     return memoryInMB.toFixed(2) + " MB";
 }
@@ -42,7 +42,7 @@ export function formatMemoryValue(memoryWithUnits) {
  * 
  * @returns  {String} formatted String in GB.
  */
-export function formatTrafficValue(trafficInBytes) {
+export function formatTraffic(trafficInBytes) {
     const trafficInGB = trafficInBytes / (1024 * 1024 * 1024);
     return trafficInGB.toFixed(2) + " GB";
 }
@@ -53,7 +53,7 @@ export function formatTrafficValue(trafficInBytes) {
  * @param {number} seconds - The time in seconds to be formatted.
  * @returns {string} The formatted time string in HH:MM:SS format.
  */
-export function formatTimeValue(seconds) {
+export function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds % 60)}`;
@@ -71,6 +71,7 @@ export function progressBar(usedPercentage, type='') {
     let progressFill, progressText;
 
     if (!progressBarElement) {
+        console.log('%c new div','color:green;');
         progressBarElement = document.createElement("div");
         progressBarElement.className = `progress-bar ${type}`;
 
@@ -110,7 +111,7 @@ function padZero(value) {
  * @param {number} rateInKbps - The rate value in kilobits per second (Kbps).
  * @returns {string} The formatted rate value in kilobytes per second (KB/s).
  */
-export function formatRateValue(rateInKbps) {
+export function formatRate(rateInKbps) {
     return (rateInKbps / 1024).toFixed(2) + " KB/s"
 }
 

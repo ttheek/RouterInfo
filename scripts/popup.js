@@ -224,7 +224,7 @@ function updateVersion() {
             var copyright = document.getElementById("copy");
             if (copyright) {
                 copyright.innerHTML = `${versionData.name} v${versionData.version}<br>
-                                        T.Theekshana &copy; 2023`
+                                        T.Theekshana &copy; 2024`
             }
         })
         .catch(error => {

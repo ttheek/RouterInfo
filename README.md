@@ -1,6 +1,6 @@
 # RouterInfo
-###Overview
-This Chrome extension provides a comprehensive dashboard for **ZLT home broadband** users. It offers real-time insights and controls, making it easier to monitor the broadband connection directly from your browser.
+### Overview
+This Chrome extension provides a comprehensive dashboard for **ZLT home broadband**.
 
 ### Features
 - CPU/Memory Usage: View real-time CPU and memory usage of your broadband router.
@@ -8,3 +8,5 @@ This Chrome extension provides a comprehensive dashboard for **ZLT home broadban
 - Up/Down Traffic: Keep track of the total uploaded and downloaded data.
 - Connected Devices: See a list of all devices currently connected to your network.
 - Router Control: Easily restart your router directly from the dashboard.
+
+![Screenshot of RouterInfo](images/Screenshot.png "Screenshot of RouterInfo")

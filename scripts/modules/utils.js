@@ -9,7 +9,7 @@
  * @param {number|string} value - The input value to extract the numeric value from.
  * @returns {number} The extracted numeric value.
  */
-export function extractNumeric(valueWithUnits) {
+export function extrNum(valueWithUnits) {
     if (typeof value === "number") {
         return value;
     }
@@ -28,7 +28,7 @@ export function extractNumeric(valueWithUnits) {
  * @returns {string} The formatted memory value in megabytes (MB).
  */
 export function formatMemory(memoryWithUnits) {
-    const memoryInKB = extractNumeric(memoryWithUnits);
+    const memoryInKB = extrNum(memoryWithUnits);
     const memoryInMB = memoryInKB / 1024;
     return memoryInMB.toFixed(2) + " MB";
 }
@@ -115,12 +115,3 @@ export function formatRate(rateInKbps) {
     return (rateInKbps / 1024).toFixed(2) + " KB/s"
 }
 
-/**
- * Converts a string to Base64.
- *
- * @param {string} str - The string to convert.
- * @returns {string} The Base64 encoded string.
- */
-export function stringToBase64(str) {
-    return btoa(str);
-}

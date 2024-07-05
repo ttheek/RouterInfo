@@ -1,4 +1,4 @@
-import { stringToBase64 } from './utils.js';
+import {username,password} from './config.js';
 /**
  * gets data from router.
  * 
@@ -60,9 +60,7 @@ export async function setCmdProcess(params) {
  * @param   {String} password  Password.
  * @returns {JSON|null} data or null.
  */
-export async function sendLoginRequest(username, password) {
-    const user= stringToBase64(username)
-    const pass= stringToBase64(password)
+export async function login() {
     const url = "http://192.168.8.1/goform/goform_set_cmd_process";
     const params = new URLSearchParams();
     params.append("isTest", "false");

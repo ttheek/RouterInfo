@@ -21,10 +21,33 @@
         <span id="overlay-txt"></span>
         <img src="images/loading.gif" class="loading" alt="restarting">
     </div>
-    <div id="info-data"></div>
-    <div id="data-rate"></div>
-    <div id="info-container2"></div>
-    <div id="info-container"></div>
+    <div id="info-data">
+        <h2>Data Usage</h2>
+        &UpArrowBar; Uplink Traffic: <span id=up_traffic>-</span><br>
+        &DownArrowBar; Downlink Traffic: <span id=down_traffic>-</span><br>
+        &#8693; Total Taffic: <span id=total_traffic>-</span></div>
+    <div id="data-rate">
+        <h2>Data Rate &#8693;</h2>
+        Up Rate: <span id="uplink_rate">-</span><br>
+        Down Rate: <span id="downlink_rate">-</span><br>
+    </div>
+    <div id="info-container2">
+        <h2>System</h2>
+        SIM Status: <span id="sim_status">-</span><br>
+        WAN IP: <span id="wan_ip">-</span><br>
+        LTE Band: <span id="lte_band">-</span><br>
+        Online Time: <span id="online_time">-</span><br>
+    </div>
+    <div id="info-container">
+        <h2>Memory Information</h2>
+        <span id="loginInfo">Login to view this data. 
+            <button type="button" class="login" id="buttonButton">Login</button></span>
+            Total Memory: <span id="mem_total">-</span><br>
+            Free Memory: <span id="mem_free">-</span><br>
+            Cached Memory: <span id="mem_cached">-</span><br>
+            Active Memory: <span id="mem_active">-</span><br>
+            <div id="usage"></div>
+    </div>
     <div id="login-status"></div>
     <div id="connected-devices"></div>
     <br>

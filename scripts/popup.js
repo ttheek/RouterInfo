@@ -1,25 +1,22 @@
-import { sendLoginRequest,setCmdProcess,getCmdProcess } from './lib/api.js';
-import { extractNumeric,formatMemory,formatTraffic,formatRate } from './lib/utils.js';
-import { formatTime,progressBar } from './lib/utils.js';
+import * as api from './modules/api.js';
+import * as util from './modules/utils.js';
 
-const username = "T3BlcmF0b3I="; // Base64 encoded username Operator
-const password = "b1ZBSFpYZUg="; // Base64 encoded password oVAHZXeH
 const getElement = (id) => document.getElementById(id);
+const setElement = function(id,value){ const element = getElement(id);element.innerHTML = value;                        }
 const infoContainer = getElement("info-container");
+const usage = getElement("usage");
 const overlay = getElement("overlay");
 const overlayTXT = getElement("overlay-txt");
-const infoContainer2 = getElement("info-container2");
 const internetElement = getElement("internet");
 const internet2 = getElement("internet2");
-const signal = getElement("signal")
-const wifi = getElement("wifi")
-const infoData = getElement("info-data");
-const dataRate = getElement("data-rate");
+const signal = getElement("signal");
+const wifi = getElement("wifi");
+const loginInfo = getElement("loginInfo")
 const connectedDevices = getElement("connected-devices");
 let isLoggedIn = false;
 
 function checkLoginStatus() {
-    getCmdProcess('loginfo')
+    api.getCmdProcess('loginfo')
         .then(data => {
             if (!data) {
                 console.log('Failed to fetch data.');
@@ -40,19 +37,19 @@ function checkLoginStatus() {
 checkLoginStatus()
 
 function webSignal() {
-    getCmdProcess('web_signal,sta_count', true)
+    api.getCmdProcess('web_signal,sta_count', true)
         .then(data => {
             if (!data) {
                 return;
             }
-            const {web_signal,sta_count} = data; 
+            let {web_signal,sta_count} = data; 
             signal.classList = web_signal ? `signal${web_signal}` : `signal_none`;
             wifi.classList = sta_count ? `wifi_status${sta_count}` : 'wifi_status0'  
         });
 }
 
 function connected_devices() {
-    getCmdProcess('station_list')
+    api.getCmdProcess('station_list')
         .then(data => {
             if (!data) {
                 return;
@@ -65,7 +62,7 @@ function connected_devices() {
                 Hostname: <b>${device.hostname}</b><br>
                 Device MAC: ${device.mac_addr}<br>
                 IP Address: ${device.ip_addr}<br>
-                Connection Time: ${formatTime(device.connect_time)}<br><br>
+                Connection Time: ${util.formatTime(device.connect_time)}<br><br>
             `).join('');
 
             connectedDevices.innerHTML += deviceHTML;
@@ -74,19 +71,13 @@ function connected_devices() {
 
 
 function updateSystemStatus() {
-    getCmdProcess('system_status')
+    api.getCmdProcess('system_status')
     .then(data => {
         if (!data) {
-            infoContainer2.innerHTML = `
-                <h2>System</h2>
-                SIM Status: -<br>
-                WAN IP: -<br>
-                LTE Band: -<br>
-                Online Time: -<br>`;
             return;
         }
-        const { service_status, network_type, lte_band,
-            plmn, sim_status, wan_ip, limit_switch,online_time,
+        let { service_status, network_type, lte_band,
+            plmn, sim_status, wan_ip, online_time,
             uplink_traffic, downlink_traffic, uplink_rate, downlink_rate} = data;            
         
         let connection = '';
@@ -105,33 +96,25 @@ function updateSystemStatus() {
         }
         webSignal()
         internet2.classList = plmn2;
-        internetElement.innerHTML = `${connection} ${network_type2}`
-
-        infoContainer2.innerHTML = `
-            <h2>System</h2>
-            SIM Status: ${sim_status}<br>
-            WAN IP: ${wan_ip}<br>
-            LTE Band: ${lte_band}<br>
-            Online Time: ${formatTime(online_time)}<br>`;
+        internetElement.innerHTML = `${connection} ${network_type2}`;
+        const total_traffic = (util.extrNum(util.formatTraffic(uplink_traffic)) + 
+            util.extrNum(util.formatTraffic(downlink_traffic))).toFixed(2);
         
-        const up_traffic = formatTraffic(uplink_traffic)
-        const down_traffic = formatTraffic(downlink_traffic)
-        const total_traffic = (extractNumeric(up_traffic) + extractNumeric(down_traffic)).toFixed(2)
-        infoData.innerHTML = `
-            <h2>Data Usage</h2>
-            &UpArrowBar; Uplink Traffic: ${up_traffic}<br>
-            &DownArrowBar; Downlink Traffic: ${down_traffic}<br>
-            &#8693; Total Taffic: ${total_traffic} GB`;
-        dataRate.innerHTML = `
-            <h2>Data Rate &#8693;</h2>
-            Up Rate: ${formatRate(uplink_rate)}<br>
-            Down Rate: ${formatRate(downlink_rate)}<br>`;    
+        setElement("sim_status",sim_status);
+        setElement("wan_ip",wan_ip);
+        setElement("lte_band",lte_band);
+        setElement("online_time",util.formatTime(online_time)) ;   
+        setElement("up_traffic",util.formatTraffic(uplink_traffic));
+        setElement("down_traffic",util.formatTraffic(downlink_traffic));
+        setElement("total_traffic",`${total_traffic} GB`); 
+        setElement("uplink_rate",util.formatRate(uplink_rate));
+        setElement("downlink_rate",util.formatRate(downlink_rate));
     });
 }
 
 function login() {
     displayOverlay("Logging in...");
-    sendLoginRequest(username, password)
+    api.login()
     .then(data => {
         if (data) {
             isLoggedIn = true;
@@ -157,7 +140,7 @@ function restartRouter() {
 
     [init1, init2,loginCheckInterval].forEach(clearInterval);
 
-    setCmdProcess('REBOOT_DEVICE')
+    api.setCmdProcess('REBOOT_DEVICE')
         .then(data => {
             overlayTXT.innerText = data ? "Waiting..." : "Failed to fetch data.";
             if (!data) console.log('Failed to fetch data.');
@@ -167,51 +150,43 @@ function restartRouter() {
 function updateMemoryStatus() {
     if (isLoggedIn == false) {
         if (infoContainer) {
-            infoContainer.innerHTML = `<h2>Memory Information</h2>Please login to view this data.`;
-            const loginButton = document.createElement("button");
-            loginButton.innerText = "Login";
-            loginButton.className = "login";
+            const loginButton = getElement("buttonButton");
             loginButton.addEventListener("click", login);
-            infoContainer.appendChild(loginButton);
+            loginInfo.appendChild(loginButton);
         }
         return;
     }
-    getCmdProcess('tz_dynamic_info')
+    api.getCmdProcess('tz_dynamic_info')
         .then(memoryData => {
             if (!memoryData) {
                 console.log('Failed to fetch data.');
                 return;
             }
+            loginInfo.innerHTML = '';
 
             if (infoContainer) {
                 const { mem_total, mem_free, mem_cached, mem_active, tz_cpu_usage } = memoryData;
-                const memT = extractNumeric(mem_total);
-                const memF = extractNumeric(mem_free);
+                const memT = util.extrNum(mem_total);
+                const memF = util.extrNum(mem_free);
                 const memoryUsedPercentage = Math.round(((memT - memF) / memT) * 100,3);
-                const cpuUsageProgress = progressBar(extractNumeric(tz_cpu_usage),'cpu');
-                const memoryUsageProgress = progressBar(memoryUsedPercentage, 'mem')
-                if (cpuUsageProgress){
+                const cpuUsageProgress = util.progressBar(util.extrNum(tz_cpu_usage),'cpu');
+                const memoryUsageProgress = util.progressBar(memoryUsedPercentage, 'mem');
 
-                }
+                setElement("mem_total", util.formatMemory(mem_total));
+                setElement("mem_free", util.formatMemory(mem_free));
+                setElement("mem_cached", util.formatMemory(mem_cached));
+                setElement("mem_active", util.formatMemory(mem_active));
 
-                infoContainer.innerHTML = `
-                    <h2>Memory Information</h2>
-                    Total Memory: ${formatMemory(mem_total)}<br>
-                    Free Memory: ${formatMemory(mem_free)}<br>
-                    Cached Memory: ${formatMemory(mem_cached)}<br>
-                    Active Memory: ${formatMemory(mem_active)}<br>
-                    <br>CPU Usage: ${tz_cpu_usage}<br>`;
-
-                infoContainer.appendChild(cpuUsageProgress);
-                    
-                infoContainer.innerHTML += `<br>Memory Usage: ${memoryUsedPercentage}%`;
-                infoContainer.appendChild(memoryUsageProgress);
+                usage.innerHTML = `<br>CPU Usage: ${tz_cpu_usage}%`;
+                usage.appendChild(cpuUsageProgress);
+                usage.innerHTML += `<br>Memory Usage: ${memoryUsedPercentage}%`;
+                usage.appendChild(memoryUsageProgress);
                 
                 const restartButton = document.createElement("button");
                 restartButton.className = "restart"
                 restartButton.innerText = "Restart";
                 restartButton.addEventListener("click", restartRouter);
-                infoContainer.appendChild(restartButton);                
+                usage.appendChild(restartButton);                
             }
         });
     

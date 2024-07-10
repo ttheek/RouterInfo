@@ -143,7 +143,7 @@ function restartRouter() {
     api.setCmdProcess('REBOOT_DEVICE')
         .then(data => {
             overlayTXT.innerText = data ? "Waiting..." : "Failed to fetch data.";
-            if (!data) console.log('Failed to fetch data.');
+            if (!data){console.log('Failed to fetch data.')};
         });
 }
 

@@ -1,18 +1,18 @@
 import * as api from './modules/api.js';
 import * as util from './modules/utils.js';
 
-const getElement = (id) => document.getElementById(id);
-const setElement = function(id,value){ const element = getElement(id);element.innerHTML = value;                        }
-const infoContainer = getElement("info-container");
-const usage = getElement("usage");
-const overlay = getElement("overlay");
-const overlayTXT = getElement("overlay-txt");
-const internetElement = getElement("internet");
-const internet2 = getElement("internet2");
-const signal = getElement("signal");
-const wifi = getElement("wifi");
-const loginInfo = getElement("loginInfo")
-const connectedDevices = getElement("connected-devices");
+const getElem = util.getElement;
+const setElem = util.setElement;
+const infoContainer = getElem("info-container");
+const usage = getElem("usage");
+const overlay = getElem("overlay");
+const overlayTXT = getElem("overlay-txt");
+const internetElement = getElem("internet");
+const internet2 = getElem("internet2");
+const signal = getElem("signal");
+const wifi = getElem("wifi");
+const loginInfo = getElem("loginInfo")
+const connectedDevices = getElem("connected-devices");
 let isLoggedIn = false;
 
 function checkLoginStatus() {
@@ -100,15 +100,15 @@ function updateSystemStatus() {
         const total_traffic = (util.extrNum(util.formatTraffic(uplink_traffic)) + 
             util.extrNum(util.formatTraffic(downlink_traffic))).toFixed(2);
         
-        setElement("sim_status",sim_status);
-        setElement("wan_ip",wan_ip);
-        setElement("lte_band",lte_band);
-        setElement("online_time",util.formatTime(online_time)) ;   
-        setElement("up_traffic",util.formatTraffic(uplink_traffic));
-        setElement("down_traffic",util.formatTraffic(downlink_traffic));
-        setElement("total_traffic",`${total_traffic} GB`); 
-        setElement("uplink_rate",util.formatRate(uplink_rate));
-        setElement("downlink_rate",util.formatRate(downlink_rate));
+        setElem("sim_status",sim_status);
+        setElem("wan_ip",wan_ip);
+        setElem("lte_band",lte_band);
+        setElem("online_time",util.formatTime(online_time)) ;   
+        setElem("up_traffic",util.formatTraffic(uplink_traffic));
+        setElem("down_traffic",util.formatTraffic(downlink_traffic));
+        setElem("total_traffic",`${total_traffic} GB`); 
+        setElem("uplink_rate",util.formatRate(uplink_rate));
+        setElem("downlink_rate",util.formatRate(downlink_rate));
     });
 }
 
@@ -150,7 +150,7 @@ function restartRouter() {
 function updateMemoryStatus() {
     if (isLoggedIn == false) {
         if (infoContainer) {
-            const loginButton = getElement("buttonButton");
+            const loginButton = getElem("buttonButton");
             loginButton.addEventListener("click", login);
             loginInfo.appendChild(loginButton);
         }
@@ -172,10 +172,10 @@ function updateMemoryStatus() {
                 const cpuUsageProgress = util.progressBar(util.extrNum(tz_cpu_usage),'cpu');
                 const memoryUsageProgress = util.progressBar(memoryUsedPercentage, 'mem');
 
-                setElement("mem_total", util.formatMemory(mem_total));
-                setElement("mem_free", util.formatMemory(mem_free));
-                setElement("mem_cached", util.formatMemory(mem_cached));
-                setElement("mem_active", util.formatMemory(mem_active));
+                setElem("mem_total", util.formatMemory(mem_total));
+                setElem("mem_free", util.formatMemory(mem_free));
+                setElem("mem_cached", util.formatMemory(mem_cached));
+                setElem("mem_active", util.formatMemory(mem_active));
 
                 usage.innerHTML = `<br>CPU Usage: ${tz_cpu_usage}%`;
                 usage.appendChild(cpuUsageProgress);

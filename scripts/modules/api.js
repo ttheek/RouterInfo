@@ -1,4 +1,4 @@
-import {username,password} from './config.js';
+import {username,password,getURL,setURL} from './config.js';
 /**
  * gets data from router.
  * 
@@ -9,8 +9,8 @@ import {username,password} from './config.js';
  * @returns  {JSON|null} data or null.
  */
 export async function getCmdProcess(params, multi_data=false) {
-    var multi = multi_data ? `multi_data=1&` : ``;
-    const baseUrl = `http://192.168.8.1/goform/goform_get_cmd_process?${multi}isTest=false&cmd=`;
+    const multi = multi_data ? `multi_data=1&` : ``;
+    const baseUrl = `${getURL}?${multi}isTest=false&cmd=`;
     const url = `${baseUrl}${encodeURIComponent(params)}`;
 
     try {
@@ -31,11 +31,12 @@ export async function getCmdProcess(params, multi_data=false) {
 /**
  * Sends data to the router.
  *
+ * @deprecated since v1.6.2
  * @param   {String} params  Parameters to send.
  * @returns {JSON|null} data or null.
  */
-export async function setCmdProcess(params) {
-    const baseUrl = 'http://192.168.8.1/goform/goform_set_cmd_process?isTest=false&goformId=';
+export async function setCmdProcessOld(params) {
+    const baseUrl = `${setURL}?isTest=false&goformId=`;
     const url = `${baseUrl}${encodeURIComponent(params)}`;
 
     try {
@@ -54,6 +55,37 @@ export async function setCmdProcess(params) {
 }
 
 /**
+ * Sends data to the router using POST method.
+ *
+ * @param   {String} params  Parameters to send.
+ * @returns {JSON|null} data or null.
+ */
+export async function setCmdProcess(params) {
+    const baseUrl = setURL;
+
+    try {
+        const response = await fetch(baseUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `isTest=false&goformId=${encodeURIComponent(params)}`
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        // console.error('Error fetching data:', error);
+        return null;
+    }
+}
+
+
+/**
  * Login to router.
  *
  * @param   {String} username  Username.
@@ -61,7 +93,7 @@ export async function setCmdProcess(params) {
  * @returns {JSON|null} data or null.
  */
 export async function login() {
-    const url = "http://192.168.8.1/goform/goform_set_cmd_process";
+    const url = setURL;
     const params = new URLSearchParams();
     params.append("isTest", "false");
     params.append("goformId", "LOGIN");

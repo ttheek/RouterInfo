@@ -140,10 +140,9 @@ function restartRouter() {
 
     [init1, init2,loginCheckInterval].forEach(clearInterval);
 
-    api.setCmdProcess('REBOOT_DEVICE')
+    api.setCmdProcess({goformId:'REBOOT_DEVICE'})
         .then(data => {
             overlayTXT.innerText = data ? "Waiting..." : "Failed to fetch data.";
-            if (!data){console.log('Failed to fetch data.')};
         });
 }
 

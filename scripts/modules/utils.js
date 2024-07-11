@@ -28,9 +28,7 @@ export function extrNum(valueWithUnits) {
  * @returns {string} The formatted memory value in megabytes (MB).
  */
 export function formatMemory(memoryWithUnits) {
-    const memoryInKB = extrNum(memoryWithUnits);
-    const memoryInMB = memoryInKB / 1024;
-    return memoryInMB.toFixed(2) + " MB";
+    return (extrNum(memoryWithUnits) / 1024).toFixed(2) + " MB";
 }
 
 /**
@@ -43,8 +41,7 @@ export function formatMemory(memoryWithUnits) {
  * @returns  {String} formatted String in GB.
  */
 export function formatTraffic(trafficInBytes) {
-    const trafficInGB = trafficInBytes / (1024 * 1024 * 1024);
-    return trafficInGB.toFixed(2) + " GB";
+    return (trafficInBytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
 }
 
 /**

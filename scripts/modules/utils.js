@@ -115,3 +115,7 @@ export function formatRate(rateInKbps) {
     return (rateInKbps / 1024).toFixed(2) + " KB/s"
 }
 
+export const getElement = (id) => document.getElementById(id);
+export const setElement = function(id,value){ const element = getElement(id);element.innerHTML = value;}
+
+

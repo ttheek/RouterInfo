@@ -29,9 +29,14 @@ export async function getCmdProcess(params, multi_data=false) {
 }
 
 /**
- * Sends data to the router using POST method.
+ * Sends data and commands to the router using POST method.
  *
  * @param   {Object} params  Parameters to send as key-value pairs.
+ * @example setCmdProcess({
+        goformId: "LOGIN",
+        username: username,
+        password: password
+    }) //(goformId is required)
  * @returns {Promise<JSON|null>} data or null.
  */
 export async function setCmdProcess(params) {

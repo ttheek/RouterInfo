@@ -113,6 +113,7 @@ function updateSystemStatus() {
 }
 
 function login() {
+    if (isLoggedIn != true){
     displayOverlay("Logging in...");
     api.login()
     .then(data => {
@@ -124,6 +125,7 @@ function login() {
             console.log('Failed to send login request.');
         }
     });
+};
 }
 
 function displayOverlay(message="") {
@@ -198,7 +200,7 @@ function updateVersion() {
             var copyright = document.getElementById("copy");
             if (copyright) {
                 copyright.innerHTML = `${versionData.name} v${versionData.version}<br>
-                                        T.Theekshana &copy; 2024`
+                                        <a href="https://github.com/ttheek/">T.Theekshana</a> &copy; 2024`
             }
         })
         .catch(error => {

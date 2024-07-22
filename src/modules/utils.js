@@ -68,7 +68,7 @@ export function progressBar(usedPercentage, type='') {
     let progressFill, progressText;
 
     if (!progressBarElement) {
-        console.log('%c new div','color:green;');
+        // console.log('%c new div','color:green;');
         progressBarElement = document.createElement("div");
         progressBarElement.className = `progress-bar ${type}`;
 

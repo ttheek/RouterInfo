@@ -1,7 +1,7 @@
 import * as api from './modules/api.js';
 import * as util from './modules/utils.js';
 
-const getElem = util.getElement;
+const getElem = (id) => document.getElementById(id);
 const setElem = util.setElement;
 const infoContainer = getElem("info-container");
 const usage = getElem("usage");
@@ -207,7 +207,7 @@ function updateVersion() {
     fetch("./manifest.json")
         .then(response => response.json())
         .then(versionData => {
-            var copyright = document.getElementById("copy");
+            var copyright = getElem("copy");
             if (copyright) {
                 copyright.innerHTML = `${versionData.name} v${versionData.version}<br>
                                         <a href="https://github.com/ttheek/" target="_blank">T.Theekshana</a> &copy; 2024`

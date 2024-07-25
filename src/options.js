@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const themeSelect = document.getElementById('theme');
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
-    const saveBtn = document.getElementById('saveBtn');
-    const snackbar = document.getElementById('snackbar');
+    const getElm = (id) => document.getElementById(id);
+    const themeSelect = getElm('theme');
+    const usernameInput = getElm('username');
+    const passwordInput = getElm('password');
+    const saveBtn = getElm('saveBtn');
+    const snackbar = getElm('snackbar');
 
     // Load saved settings when the options page is loaded
     chrome.storage.sync.get(['theme', 'credentials'], function (result) {

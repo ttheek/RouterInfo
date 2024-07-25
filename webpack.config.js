@@ -2,11 +2,14 @@ const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-  entry: './src/popup.js',
-  output: {
-    filename: 'popup.js',
-    path: path.resolve(__dirname, 'scripts'),
-  },
+  entry: {
+    popup: '/src/popup.js',
+    options: '/src/options.js'
+},
+output: {
+  filename: '[name].min.js',
+  path: path.resolve(__dirname, 'scripts'),
+},
   module: {
     rules: [
       {

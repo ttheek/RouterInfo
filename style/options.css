@@ -79,149 +79,101 @@
     --color-blue-gray-800: #37474F;
     --color-blue-gray-900: #263238;
   }
-  
-html {
-    padding: 0;
-}
 
 body {
-    width: 250px;
-    padding: 5px;
-    font-family: JetBrains mono;
-    color: var(--color-secondary-100);
     background-color: var(--color-blue-gray-900);
-}
-body h2{
-    color: var(--color-secondary-400)
+    color: var(--color-primary-100);
+    font-family: Arial, sans-serif;
+    margin: 20px;
 }
 
-footer {
+.section {
     background-color: var(--color-blue-gray-700);
-    text-align: center;
-    padding: 2px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+}
+.section h2,h1 {
+    font-family:JetBrains mono, Courier, monospace;
+    margin-top: 0;
+    color: var(--color-yellow-300)
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: 500;
+}
+input[type="text"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
     border-radius: 4px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
 }
-
-.progress-bar {
-    width: 100%;
-    height: 10px;
-    background-color: var(--color-blue-gray-700);
-    transition:  500ms;
-    border-radius: 5px;
-    overflow: hidden;
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus {
+    border-color: #6200ea;
+    outline: none;
 }
-
-.progress-fill {
-    height: 100%;
-    background-color: #00E676;
-    transition:  500ms;
-    transition-timing-function: ease;
+input[type="checkbox"] {
+    margin-right: 8px;
 }
-
-.progress-text {
-    font-size: 12px;
-    text-align: center;
-    margin-top: 2px;
-}
-
-.status {
-    background-color: var(--color-blue-gray-700);
-    padding: 5px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.no-internet {
-    color: var(--color-red-400);
-    font-weight: 600;
-    align-self: flex-end;
-    padding-bottom: 8px;
-}
-
-.internet {
-    color: #00E676;
-    font-weight: 600;
-    align-self: flex-end;
-    font-size: 14px;
-}
-
 button {
-    display: inline-block;
-    padding: 8px 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    text-decoration: none;
-    text-align: center;
+    background-color: var(--color-green-500);
+    color: var(--color-blue-gray-900);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, box-shadow 0.3s;
-    margin-top: 10px;
-    font-family: JetBrains mono;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
-
-.restart {
-    background-color: #00E676;
-    color: #181717;
-}
-
-.login {
-    background-color: #1DE9B6;
-    color: #181717;
-}
-
 button:hover {
-    background-color: #e0e0e0;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: var(--color-secondary-300);
 }
 
-#overlay {
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: var(--color-blue-gray-400);
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(231, 231, 231, 0.911);
-    z-index: 9999;
-    text-align: center;
-    font-size: 20px;
-    padding-top: 90%;
-    padding-left: 10px;
-    justify-content: center;
-    transition: 0.5s;
-    display: none;
-}
-
-#overlay::after {
-    content: "";
-    position: absolute;
-    top: 50%;
+    z-index: 1;
     left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 24px;
-    color: white;
-    text-align: center;
+    bottom: 30px;
+    transform: translateX(-50%);
+    font-size: 17px;
 }
-
-.loading {
-    width: 60%;
-    display: flex;
-    padding-left: 34px;
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
-
-.signal-container {
-    display: flex;
-    padding-top: 10px;
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
 }
-
-#signal{
-    width: 40px;
-    height: 30px;
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
 }
-
-#wifi{
-    width: 36px;
-    height: 24px
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
 }
-
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Settings</title>
+    <link rel="stylesheet" href="style/options.css">
+</head>
+<body>
+    <h1>Extension Options</h1>
+
+    <div class="section" id="general-settings">
+        <h2>General Settings</h2>
+        <label for="theme">Theme:</label>
+        <select id="theme">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+        </select>
+    </div>
+
+    <div class="section" id="credentials-settings">
+        <h2>Credentials</h2>
+        <label for="username">Username:</label>
+        <input type="text" id="username" />
+        <label for="password">Password:</label>
+        <input type="password" id="password" />
+    </div>
+
+    <button id="saveBtn">Save</button>
+    <div id="snackbar"></div>
+    <script src="scripts/options.min.js"></script>
+</body>
+</html>

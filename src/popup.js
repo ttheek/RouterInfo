@@ -47,6 +47,16 @@ function webSignal() {
             wifi.classList = sta_count ? `wifi_status${sta_count}` : 'wifi_status0'  
         });
 }
+function dataLimit(){
+    api.getCmdProcess(`data_volume_limit_switch,data_volume_limit_size,
+                        monthly_rx_bytes,monthly_tx_bytes`, true)
+        .then(data => {
+            if (!data) {
+                return;
+            }let {data_volume_limit_switch,data_volume_limit_size,
+                monthly_rx_bytes,monthly_tx_bytes} = data; 
+        });
+}
 
 function connected_devices() {
     api.getCmdProcess('station_list')
@@ -200,7 +210,7 @@ function updateVersion() {
             var copyright = document.getElementById("copy");
             if (copyright) {
                 copyright.innerHTML = `${versionData.name} v${versionData.version}<br>
-                                        <a href="https://github.com/ttheek/">T.Theekshana</a> &copy; 2024`
+                                        <a href="https://github.com/ttheek/" target="_blank">T.Theekshana</a> &copy; 2024`
             }
         })
         .catch(error => {

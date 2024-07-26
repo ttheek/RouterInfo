@@ -4,59 +4,83 @@
 */
 
 /**
- * Extracts a numeric value from a given input, which can be a number or a string with a percentage.
- *
- * @param {number|string} value - The input value to extract the numeric value from.
- * @returns {number} The extracted numeric value.
+ * formatting utility functions.
  */
-export function extrNum(valueWithUnits) {
-    if (typeof value === "number") {
-        return value;
+const format = {
+
+    /**
+     * Extracts a numeric value from a given input, which can be a number or a string with a percentage.
+     *
+     * @param {number|string} value - The input value to extract the numeric value from.
+     * @returns {number} The extracted numeric value.
+     */
+    extrNum(valueWithUnits) {
+        if (typeof valueWithUnits === "number") {
+            return valueWithUnits;
+        }
+        if (typeof valueWithUnits !== 'string') {
+            return 0;
+        }
+
+        const numericValue = parseFloat(valueWithUnits.replace(/[^\d.-]/g, ''));
+        return isNaN(numericValue) ? 0 : numericValue;
+    },
+
+    /**
+     * Formats a given memory value with units to a string in MB with two decimal places.
+     *
+     * @param {string} memoryWithUnits - The memory value with units (e.g., "2048KB").
+     * @returns {string} The formatted memory value in megabytes (MB).
+     */
+    formatMemory(memoryWithUnits) {
+        return (this.extrNum(memoryWithUnits) / 1024).toFixed(2) + " MB";
+    },
+        /**
+     * format bytes to GB.
+     * 
+     * @param   {Number} trafficInBytes  String to extract.
+     * @example trafficValue(1073741824)
+     * //returns "1 GB"
+     * 
+     * @returns  {String} formatted String in GB.
+     */
+    traffic(trafficInBytes) {
+        return (trafficInBytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+    },
+
+    /**
+     * Formats a given time in seconds into a string with the format HH:MM:SS.
+     *
+     * @param {number} seconds - The time in seconds to be formatted.
+     * @returns {string} The formatted time string in HH:MM:SS format.
+     */
+    time(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const formattedTime = `${this.padZero(hours)}:${this.padZero(minutes)}:${this.padZero(seconds % 60)}`;
+        return formattedTime;
+    },
+
+    /**
+     * Pads a number with a leading zero if it is less than 10.
+     *
+     * @param {number} num - The number to pad.
+     * @returns {string} The padded number as a string.
+     */
+    padZero(value) {
+        return value.toString().padStart(2, "0");
+    },
+
+    /**
+     * Formats a given rate value in Kbps to a string in KB/s with two decimal places.
+     *
+     * @param {number} rateInKbps - The rate value in kilobits per second (Kbps).
+     * @returns {string} The formatted rate value in kilobytes per second (KB/s).
+     */
+    rate(rateInKbps) {
+        return (rateInKbps / 1024).toFixed(2) + " KB/s"
     }
-    if (typeof valueWithUnits !== 'string') {
-        return 0;
-    }
-
-    const numericValue = parseFloat(valueWithUnits.replace(/[^\d.-]/g, ''));
-    return isNaN(numericValue) ? 0 : numericValue;
-}
-
-/**
- * Formats a given memory value with units to a string in MB with two decimal places.
- *
- * @param {string} memoryWithUnits - The memory value with units (e.g., "2048KB").
- * @returns {string} The formatted memory value in megabytes (MB).
- */
-export function formatMemory(memoryWithUnits) {
-    return (extrNum(memoryWithUnits) / 1024).toFixed(2) + " MB";
-}
-
-/**
- * format bytes to GB.
- * 
- * @param   {Number} trafficInBytes  String to extract.
- * @example formatTrafficValue(1073741824)
- * //returns "1 GB"
- * 
- * @returns  {String} formatted String in GB.
- */
-export function formatTraffic(trafficInBytes) {
-    return (trafficInBytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
-}
-
-/**
- * Formats a given time in seconds into a string with the format HH:MM:SS.
- *
- * @param {number} seconds - The time in seconds to be formatted.
- * @returns {string} The formatted time string in HH:MM:SS format.
- */
-export function formatTime(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds % 60)}`;
-    return formattedTime;
-}
-
+};
 /**
  * Creates a progress bar element with the given usage percentage.
  *
@@ -92,26 +116,6 @@ export function progressBar(usedPercentage, type='') {
 }
 
 
-/**
- * Pads a number with a leading zero if it is less than 10.
- *
- * @param {number} num - The number to pad.
- * @returns {string} The padded number as a string.
- */
-function padZero(value) {
-    return value.toString().padStart(2, "0");
-}
+// export const getElement = (id) => document.getElementById(id);
 
-/**
- * Formats a given rate value in Kbps to a string in KB/s with two decimal places.
- *
- * @param {number} rateInKbps - The rate value in kilobits per second (Kbps).
- * @returns {string} The formatted rate value in kilobytes per second (KB/s).
- */
-export function formatRate(rateInKbps) {
-    return (rateInKbps / 1024).toFixed(2) + " KB/s"
-}
-export const getElement = (id) => document.getElementById(id);
-export const setElement = function(id,value){ const element = getElement(id);element.innerHTML = value;}
-
-
+export default format;

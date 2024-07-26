@@ -1,8 +1,9 @@
-import * as api from './modules/api.js';
+import api from './modules/api.js';
 import * as util from './modules/utils.js';
+import format from './modules/utils.js';
 
 const getElem = (id) => document.getElementById(id);
-const setElem = util.setElement;
+const setElem = function(id,value){ const element = getElem(id);element.innerHTML = value;}
 const infoContainer = getElem("info-container");
 const usage = getElem("usage");
 const overlay = getElem("overlay");
@@ -13,31 +14,58 @@ const signal = getElem("signal");
 const wifi = getElem("wifi");
 const loginInfo = getElem("loginInfo")
 const connectedDevices = getElem("connected-devices");
-let isLoggedIn = false;
+let isLoggedIn = false
 
-function checkLoginStatus() {
-    api.getCmdProcess('loginfo')
-        .then(data => {
-            if (!data) {
-                console.log('Failed to fetch data.');
+function checkLoginStatus() {    
+    chrome.storage.local.get(['isLoggedIn', 'lastLoggedIn'], function(result) {
+        const is_LoggedIn = result.isLoggedIn;
+        const lastLoggedIn = result.lastLoggedIn;
+
+        if (is_LoggedIn) {
+            const currentTime = new Date().getTime();
+            const timeDifference = currentTime - lastLoggedIn;               
+            
+            const tenMinutes = 10 * 60 * 1000;
+            
+            if (timeDifference > tenMinutes) {
                 isLoggedIn = false;
-                return;
+                console.log('Session expired. Please log in again.');
+            } else {
+                isLoggedIn = true;
+                console.log('User is logged in and session is active.');
             }
-            if (data.loginfo == "ok"){
-            isLoggedIn = true;
-            connected_devices()
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching loginfo:', error);
-            isLoggedIn = false;
-        });
+        } else {
+            api.get('loginfo')
+            .then(data => {
+                if (!data) {
+                    console.log('Failed to fetch data.');
+                    isLoggedIn = false;
+                    return;
+                }
+                if (data.loginfo == 'ok'){
+                isLoggedIn = true;
+                const currentTime = new Date().getTime();
+                chrome.storage.local.set({ isLoggedIn: true, lastLoggedIn: currentTime }, function() {
+                    isLoggedIn = true;
+                });
+                }
+                else if (data.loginfo == ''){
+                isLoggedIn = false;
+                console.log('Session expired.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching loginfo:', error);
+                isLoggedIn = false;
+            });
+        }
+    });
 }
 
 checkLoginStatus()
 
 function webSignal() {
-    api.getCmdProcess('web_signal,sta_count', true)
+    api.get('web_signal,sta_count', true)
         .then(data => {
             if (!data) {
                 return;
@@ -48,7 +76,7 @@ function webSignal() {
         });
 }
 function dataLimit(){
-    api.getCmdProcess(`data_volume_limit_switch,data_volume_limit_size,
+    api.get(`data_volume_limit_switch,data_volume_limit_size,
                         monthly_rx_bytes,monthly_tx_bytes`, true)
         .then(data => {
             if (!data) {
@@ -59,7 +87,7 @@ function dataLimit(){
 }
 
 function connected_devices() {
-    api.getCmdProcess('station_list')
+    api.get('station_list')
         .then(data => {
             if (!data) {
                 return;
@@ -72,7 +100,7 @@ function connected_devices() {
                 Hostname: <b>${device.hostname}</b><br>
                 Device MAC: ${device.mac_addr}<br>
                 IP Address: ${device.ip_addr}<br>
-                Connection Time: ${util.formatTime(device.connect_time)}<br><br>
+                Connection Time: ${format.time(device.connect_time)}<br><br>
             `).join('');
 
             connectedDevices.innerHTML += deviceHTML;
@@ -81,7 +109,7 @@ function connected_devices() {
 
 
 function updateSystemStatus() {
-    api.getCmdProcess('system_status')
+    api.get('system_status')
     .then(data => {
         if (!data) {
             return;
@@ -107,18 +135,18 @@ function updateSystemStatus() {
         webSignal()
         internet2.classList = plmn2;
         internetElement.innerHTML = `${connection} ${network_type2}`;
-        const total_traffic = (util.extrNum(util.formatTraffic(uplink_traffic)) + 
-            util.extrNum(util.formatTraffic(downlink_traffic))).toFixed(2);
+        const total_traffic = (format.extrNum(format.traffic(uplink_traffic)) + 
+        format.extrNum(format.traffic(downlink_traffic))).toFixed(2);
         
         setElem("sim_status",sim_status);
         setElem("wan_ip",wan_ip);
         setElem("lte_band",lte_band);
-        setElem("online_time",util.formatTime(online_time)) ;   
-        setElem("up_traffic",util.formatTraffic(uplink_traffic));
-        setElem("down_traffic",util.formatTraffic(downlink_traffic));
+        setElem("online_time",format.time(online_time)) ;   
+        setElem("up_traffic",format.traffic(uplink_traffic));
+        setElem("down_traffic",format.traffic(downlink_traffic));
         setElem("total_traffic",`${total_traffic} GB`); 
-        setElem("uplink_rate",util.formatRate(uplink_rate));
-        setElem("downlink_rate",util.formatRate(downlink_rate));
+        setElem("uplink_rate",format.rate(uplink_rate));
+        setElem("downlink_rate",format.rate(downlink_rate));
     });
 }
 
@@ -127,10 +155,14 @@ function login() {
     displayOverlay("Logging in...");
     api.login()
     .then(data => {
-        if (data) {
-            isLoggedIn = true;
-            updateMemoryStatus();
-            displayOverlay();
+        if (data) {                       
+            const currentTime = new Date().getTime();
+            chrome.storage.local.set({ 'isLoggedIn': true, 'lastLoggedIn': currentTime }, function() {
+                isLoggedIn = true;
+                displayOverlay();
+                updateMemoryStatus();                 
+            });
+            
         } else {
             console.log('Failed to send login request.');
         }
@@ -138,6 +170,11 @@ function login() {
 };
 }
 
+/**
+ * Displays or hides an overlay with a message.
+ * 
+ * @param {string} [message=""] - The message to display in the overlay. If an empty string is passed, the overlay will be hidden.
+ */
 function displayOverlay(message="") {
     if (message != ""){
         overlay.style.display = "block";
@@ -152,22 +189,26 @@ function restartRouter() {
 
     [init1, init2,loginCheckInterval].forEach(clearInterval);
 
-    api.setCmdProcess({goformId:'REBOOT_DEVICE'})
+    api.set({goformId:'REBOOT_DEVICE'})
         .then(data => {
+            chrome.storage.local.set({ isLoggedIn: false }, function() {
+                console.log('User logged out.');
+            });
             overlayTXT.innerText = data ? "Waiting..." : "Failed to fetch data.";
         });
 }
 
 function updateMemoryStatus() {
-    if (isLoggedIn == false) {
+    if (isLoggedIn != true) {
         if (infoContainer) {
             const loginButton = getElem("buttonButton");
             loginButton.addEventListener("click", login);
             loginInfo.appendChild(loginButton);
+            console.log(`isLoggedIn : ${isLoggedIn}`);
         }
         return;
     }
-    api.getCmdProcess('tz_dynamic_info')
+    api.get('tz_dynamic_info')
         .then(memoryData => {
             if (!memoryData) {
                 console.log('Failed to fetch data.');
@@ -177,16 +218,16 @@ function updateMemoryStatus() {
 
             if (infoContainer) {
                 const { mem_total, mem_free, mem_cached, mem_active, tz_cpu_usage } = memoryData;
-                const memT = util.extrNum(mem_total);
-                const memF = util.extrNum(mem_free);
+                const memT = format.extrNum(mem_total);
+                const memF = format.extrNum(mem_free);
                 const memoryUsedPercentage = Math.round(((memT - memF) / memT) * 100,3);
-                const cpuUsageProgress = util.progressBar(util.extrNum(tz_cpu_usage),'cpu');
+                const cpuUsageProgress = util.progressBar(format.extrNum(tz_cpu_usage),'cpu');
                 const memoryUsageProgress = util.progressBar(memoryUsedPercentage, 'mem');
 
-                setElem("mem_total", util.formatMemory(mem_total));
-                setElem("mem_free", util.formatMemory(mem_free));
-                setElem("mem_cached", util.formatMemory(mem_cached));
-                setElem("mem_active", util.formatMemory(mem_active));
+                setElem("mem_total", format.formatMemory(mem_total));
+                setElem("mem_free", format.formatMemory(mem_free));
+                setElem("mem_cached", format.formatMemory(mem_cached));
+                setElem("mem_active", format.formatMemory(mem_active));
 
                 usage.innerHTML = `<br>CPU Usage: ${tz_cpu_usage}%`;
                 usage.appendChild(cpuUsageProgress);

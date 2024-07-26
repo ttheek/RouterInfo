@@ -1,14 +1,16 @@
-import * as config from './config.js';
+import config from './config.js';
+
+const api = {
 /**
  * gets data from router.
  * 
  * @param   {String} params  Parameters to send.
  * @param   {Boolean} multi_data  if true multi_data.
- * @example getCmdProcess("web_signal")
+ * @example get("web_signal")
  * 
  * @returns  {JSON|null} data or null.
  */
-export async function getCmdProcess(params, multi_data=false) {
+async get(params, multi_data=false) {
     const multi = multi_data ? `multi_data=1&` : ``;
     const baseUrl = `${config.getURL}?${multi}isTest=false&cmd=`;
     const url = `${baseUrl}${encodeURIComponent(params)}`;
@@ -26,20 +28,20 @@ export async function getCmdProcess(params, multi_data=false) {
         // console.error('Error fetching data:', error);
         return null;
     }
-}
+},
 
 /**
  * Sends data and commands to the router using POST method.
  *
  * @param   {Object} params  Parameters to send as key-value pairs.
- * @example setCmdProcess({
+ * @example set({
         goformId: "LOGIN",
         username: username,
         password: password
     }) //(goformId is required)
  * @returns {Promise<JSON|null>} data or null.
  */
-export async function setCmdProcess(params) {
+async set(params) {
     const baseUrl = config.setURL;
 
     if (!params.goformId) {
@@ -70,8 +72,9 @@ export async function setCmdProcess(params) {
         if (error.message === 'Failed to fetch') {
             console.error('Network error: Failed to fetch');
         } else if (error.message.includes('net::ERR_EMPTY_RESPONSE')) {
-            if (params.goformId == "REBOOT_DEVICE"){
-                return "ok"
+            if (params.goformId == 'REBOOT_DEVICE'){
+                const response = 'ok';
+                return response;
             }else{
             console.error('Server error: Empty response received');
             }
@@ -80,14 +83,15 @@ export async function setCmdProcess(params) {
         }
         return null;
     }
-}
+},
 
 /**
  * Login to router.
  *
  * @returns {JSON|null} data or null.
  */
-export async function login() {
+async login() {
+    await config.initialize();
     const params = {
         goformId: "LOGIN",
         username: config.username,
@@ -95,9 +99,12 @@ export async function login() {
     };
     
     try {
-        const data = await setCmdProcess(params);
+        const data = await this.set(params);
         return data;
     } catch (error) {
         return null;
     }
 }
+}
+
+export default api;

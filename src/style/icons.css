@@ -1,6 +1,6 @@
 :root{
---wifi_img: url("../images/wifi.png");
---signal: url("../images/signal.png");
+--wifi_img: url("../assets/images/wifi.png");
+--signal: url("../assets/images/signal.png");
 }
 
 .signal_none{    
@@ -20,7 +20,7 @@
 }
 
 .Dialog{
-    background: url("../images/Dialog.png") center 0px transparent;
+    background: url("../assets/images/Dialog.png") center 0px transparent;
     width: 70px;
     height: 43px;
 }

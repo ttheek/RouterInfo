@@ -9,4 +9,4 @@ This Chrome extension provides a comprehensive dashboard for **ZLT home broadban
 - Connected Devices: See a list of all devices currently connected to your network.
 - Router Control: Easily restart your router directly from the dashboard.
 
-![Screenshot of RouterInfo](images/Screenshot.png "Screenshot of RouterInfo")
+![Screenshot of RouterInfo](doc/Screenshot.png "Screenshot of RouterInfo")

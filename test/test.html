@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Data Fetch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        #data, #errors {
+            margin: 10px;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #data {
+            background-color: #e0ffe0;
+            color: #007700;
+        }
+
+        #errors {
+            background-color: #ffe0e0;
+            color: #770000;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #333;
+        }
+        .key-value {
+            margin: 5px 0;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>API Data Fetch</h1>
+    <div id="data">Loading data...</div>
+    <div id="errors"></div>
+
+    <script type="module" src="test.js"></script>
+</body>
+</html>
